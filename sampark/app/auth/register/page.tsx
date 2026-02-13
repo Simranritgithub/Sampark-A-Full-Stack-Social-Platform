@@ -1,47 +1,73 @@
 "use client";
 import { useRouter } from "next/navigation";
+import GlassCard from "../../components/Glasscard";
 import { useEffect, useState } from "react";
 import api from "../../lib/axios";
 
-import GlassCard from "../../components/Glasscard";
-
-export default function LoginPage() {
+export default function RegisterPage() {
   const router = useRouter();
-  const [form, setForm] = useState({  
+  const [form, setForm] = useState({
+    name: "",
     email: "",
     password: ""
   });
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
-  const handleOnSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    console.log("Submitting form:", form);
-    try {
-      const res = await api.post("/auth/login", form);
+
+    const handleOnSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+      console.log("Submitting form:", form);
+      console.log("API URL:", process.env.NEXT_PUBLIC_API_URL);
+
+      try {
+      const res = await api.post("/auth/register", form);
       if (res.data.success) {
-        router.push("/dashboard");
+        router.push("/auth/login");
       }
     }
-    catch (error) {
-      console.error("Login error:", error);
-    }
-  };
+      catch (error) {
+        console.error("Registration error:", error);
+      }
+    };
+    
   return (
     <div className="min-h-screen flex items-center justify-center px-4">
       <GlassCard className="w-full max-w-md text-black">
 
         {/* Heading */}
         <h1 className="text-3xl font-bold text-center mb-2 text-black">
-          Welcome Back
+          Create Account
         </h1>
 
-        <p className="text-center mb-6 text-[#9929EA] font-semibold text-lg">
-          Login to continue to <span className="font-bold">Sampark</span>
+        <p className="text-center mb-6 text-[#9929EA]">
+          Join <span className="font-bold text-[#9929EA]">Sampark</span> and start connecting
         </p>
 
         {/* Form */}
         <form onSubmit={handleOnSubmit} className="space-y-4">
+
+          {/* Name */}
+          <div>
+            <label className="block text-sm font-medium mb-1 text-black">
+              Full Name
+            </label>
+            <input
+              type="text"
+              placeholder="Your name"
+              onChange={handleOnChange}
+              name="name"
+              value={form.name}
+              className="
+                w-full px-4 py-3 rounded-xl
+                bg-white/80
+                border border-black/20
+                focus:outline-none
+                focus:border-[#9929EA]
+                focus:ring-2 focus:ring-[#9929EA]/40
+              "
+            />
+          </div>
 
           {/* Email */}
           <div>
@@ -87,17 +113,26 @@ export default function LoginPage() {
             />
           </div>
 
-          {/* Forgot password */}
-          <div className="text-right">
-            <button
-              type="button"
-              className="text-base text-[#FF5FCF] hover:underline"
-            >
-              Forgot password?
-            </button>
+          {/* Confirm Password */}
+          <div>
+            <label className="block text-sm font-medium mb-1 text-black">
+              Confirm Password
+            </label>
+            <input
+              type="password"
+              placeholder="••••••••"
+              className="
+                w-full px-4 py-3 rounded-xl
+                bg-white/80
+                border border-black/20
+                focus:outline-none
+                focus:border-[#9929EA]
+                focus:ring-2 focus:ring-[#9929EA]/40
+              "
+            />
           </div>
 
-          {/* Login Button */}
+          {/* Register Button */}
           <button
             type="submit"
             className="
@@ -109,7 +144,7 @@ export default function LoginPage() {
               shadow-lg shadow-[#9929EA]/40
             "
           >
-            Login
+            Create Account
           </button>
         </form>
 
@@ -120,11 +155,11 @@ export default function LoginPage() {
           <div className="flex-1 h-px bg-black/20" />
         </div>
 
-        {/* Sign up */}
-        <p className="text-center text-base text-black">
-          Don’t have an account?{" "}
-          <span onClick={()=>router.push("/auth/register")} className="text-[#d7b807] font-semibold cursor-pointer hover:underline">
-          Register
+        {/* Login redirect */}
+        <p className="text-center text-sm text-black">
+          Already have an account?{" "}
+          <span onClick={()=>router.push("/auth/login")} className="text-[#edcc10] font-bold cursor-pointer hover:underline text-base">
+            Login
           </span>
         </p>
 

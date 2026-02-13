@@ -6,8 +6,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className="relative min-h-screen overflow-hidden bg-transparent">
+    
+      <div className="relative min-h-screen overflow-hidden bg-transparent">
 
         {/* Background Image */}
         <div
@@ -25,7 +25,7 @@ export default function RootLayout({
           {children}
         </main>
 
-      </body>
-    </html>
+      </div>
+    
   );
 }
