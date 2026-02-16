@@ -27,7 +27,7 @@ export const loginUser = async (body: {
   password: string;
 }) => {
   const { email, password } = body;
-
+await connectDB();
   const user = await User.findOne({ email });
   if (!user) {
     const err: any = new Error("Invalid credentials");

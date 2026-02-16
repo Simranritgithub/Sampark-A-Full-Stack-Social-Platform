@@ -4,7 +4,7 @@ import Navbar from "../components/Navbar";
 export default function DashboardPage() {
   return (
     
-    <div className="min-h-screen bg-[#9929EA] pt-24 flex justify-center">
+    <div className="min-h-screen  pt-24 flex justify-center">
       <Navbar/>
       <div className="w-full max-w-6xl space-y-6">
 
