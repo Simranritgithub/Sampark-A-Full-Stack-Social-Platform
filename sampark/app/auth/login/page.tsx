@@ -14,6 +14,7 @@ export default function LoginPage() {
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
+  
   const handleOnSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log("Submitting form:", form);
@@ -41,7 +42,7 @@ export default function LoginPage() {
         </p>
 
         {/* Form */}
-        <form onSubmit={handleOnSubmit} className="space-y-4">
+        <form  onSubmit={handleOnSubmit} className="space-y-4">
 
           {/* Email */}
           <div>

@@ -1,6 +1,7 @@
 import { User } from "../models/user";
 import { connectDB } from "../lib/db";
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 
 export const registerUser = async (body: any) => {
   const { name, email, password } = body;
@@ -22,28 +23,39 @@ export const registerUser = async (body: any) => {
 
   return user;
 };
-export const loginUser = async (body: {
+
+
+interface LoginInput {
   email: string;
   password: string;
-}) => {
-  const { email, password } = body;
-await connectDB();
+}
+
+export const loginUser = async ({ email, password }: LoginInput) => {
+  await connectDB();
+
   const user = await User.findOne({ email });
   if (!user) {
-    const err: any = new Error("Invalid credentials");
-    err.statusCode = 401;
-    throw err;
+    return { success: false, message: "Invalid credentials", status: 401 };
   }
 
-  const isMatch = await bcrypt.compare(password, user.password as string);
+  const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) {
-    const err: any = new Error("Invalid credentials");
-    err.statusCode = 401;
-    throw err;
+    return { success: false, message: "Invalid credentials", status: 401 };
   }
 
-  // ❗ password remove
+  // JWT payload
+  const token = jwt.sign(
+    { id: user._id, email: user.email },
+    process.env.JWT_SECRET!,
+    { expiresIn: "7d" }
+  );
+
+  // Remove password
   const { password: _, ...safeUser } = user.toObject();
 
-  return safeUser;
+  return {
+    success: true,
+    token,
+    user: safeUser,
+  };
 };

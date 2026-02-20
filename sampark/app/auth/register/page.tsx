@@ -9,12 +9,21 @@ export default function RegisterPage() {
   const [form, setForm] = useState({
     name: "",
     email: "",
-    password: ""
+    password: "",
+    confirmPassword: ""
   });
+
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
-
+const handleOnCapture = (e: React.FormEvent<HTMLFormElement>) => {
+   
+    if (form.password !== form.confirmPassword) {
+       e.preventDefault();
+      alert("Passwords do not match");
+      return;
+    }
+  }
     const handleOnSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       console.log("Submitting form:", form);
@@ -45,7 +54,7 @@ export default function RegisterPage() {
         </p>
 
         {/* Form */}
-        <form onSubmit={handleOnSubmit} className="space-y-4">
+        <form onSubmitCapture={handleOnCapture} onSubmit={handleOnSubmit} className="space-y-4">
 
           {/* Name */}
           <div>
@@ -121,6 +130,9 @@ export default function RegisterPage() {
             <input
               type="password"
               placeholder="••••••••"
+              onChange={handleOnChange}
+              name="confirmPassword"
+              value={form.confirmPassword}
               className="
                 w-full px-4 py-3 rounded-xl
                 bg-white/80

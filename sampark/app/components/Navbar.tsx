@@ -14,6 +14,7 @@ export default function Navbar() {
 
     {/* Links */}
     <div className="flex items-center gap-6 text-sm font-medium text-white">
+      <Link href="/createpost">CreatePost</Link>
       <Link href="/feed">Feed</Link>
       <Link href="/profile">Profile</Link>
       <Link
