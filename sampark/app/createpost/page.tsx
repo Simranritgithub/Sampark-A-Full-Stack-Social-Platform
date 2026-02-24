@@ -15,6 +15,7 @@ export default function CreatePostPage() {
     content: "",
     imageUrl: "",
     videoUrl: "",
+    captions: "",
   });
 
   const [uploading, setUploading] = useState(false);
@@ -28,11 +29,15 @@ export default function CreatePostPage() {
       [e.target.name]: e.target.value,
     }));
   };
+  
 
   /* ---------------- IMAGE UPLOAD (CLOUDINARY) ---------------- */
   const handleImageUpload = async (file: File) => {
     try {
       setUploading(true);
+      const resourceType = file.type.startsWith("video")
+    ? "video"
+    : "image";
 
       const data = new FormData();
       data.append("file", file);
@@ -40,7 +45,7 @@ export default function CreatePostPage() {
       
 
       const res = await fetch(
-        `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
+        `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/${resourceType}/upload`,
         {
           method: "POST",
           body: data,
@@ -52,7 +57,7 @@ export default function CreatePostPage() {
       setForm((prev) => ({
         ...prev,
         imageUrl: result.secure_url,
-        videoUrl: result.video_url // ✅ URL saved
+        videoUrl: result.secure_url // ✅ URL saved
       }));
     } catch (err) {
       console.error("Image upload failed", err);
@@ -78,6 +83,7 @@ export default function CreatePostPage() {
           content: "",
           imageUrl: "",
           videoUrl: "",
+          captions: "",
         });
       }
     } catch (error) {
@@ -91,41 +97,64 @@ export default function CreatePostPage() {
       <Navbar />
 
       <div className="w-full max-w-3xl">
-        <h1 className="text-4xl font-bold mb-4 text-[#9929EA]">
+        <h1 className="text-4xl font-extrabold mb-4 text-[#e4dcea]">
           Create a New Post
         </h1>
 
         <GlassCard>
           <form className="space-y-5" onSubmit={HandleonPostSubmit}>
             {/* Content */}
-            <div>
-              <label className="block text-sm font-medium mb-1 text-black">Title </label>
-              <input
-                type="text"
-                name="title"
-                required
-                value={form.title}
-                onChange={handleOnChange}
-                placeholder="Enter a title for your post..."
-                className="w-full rounded-xl px-4 py-3 bg-white/80 border border-black/20 focus:ring-2 focus:ring-[#9929EA]/40"
-              />
-              <label className="block text-sm font-medium mb-1 text-black">
-                What’s on your mind?
-              </label>
-              <textarea
-                rows={5}
-                name="content"
-                value={form.content}
-                onChange={handleOnChange}
-                placeholder="Write something meaningful..."
-                className="w-full rounded-xl px-4 py-3 bg-white/80 border border-black/20 focus:ring-2 focus:ring-[#9929EA]/40"
-              />
-            </div>
+            <div className="group">
+  <h1 className="text-2xl font-bold mb-2 text-center text-[#771bb9]">
+    Your <span className="text-[#FF5FCF]">Posts</span>
+  </h1>
+
+  <label className="block text-sm font-semibold mb-1 text-[#6b21a8] group-hover:text-[#FF5FCF]/60 transition">
+    Title
+  </label>
+
+  <input
+    type="text"
+    name="title"
+    required
+    value={form.title}
+    onChange={handleOnChange}
+    placeholder="Enter a title for your post..."
+    className="
+      w-full rounded-xl px-4 py-3
+      bg-white/80
+      border border-black/20
+      focus:ring-2 focus:ring-[#9929EA]/40
+      group-hover:border-[#FF5FCF]/60
+      transition-all
+    "
+  />
+
+  <label className="block text-sm font-semibold mt-6 text-[#6b21a8] group-hover:text-[#FF5FCF] transition">
+    What’s on your mind?
+  </label>
+
+  <textarea
+    rows={5}
+    name="content"
+    value={form.content}
+    onChange={handleOnChange}
+    placeholder="Write something meaningful..."
+    className="
+      w-full rounded-xl px-4 py-3
+      bg-white/80
+      border border-black/20
+      focus:ring-2 focus:ring-[#9929EA]/40
+      group-hover:border-[#FF5FCF]/60
+      transition-all
+    "
+  />
+</div>
 
             {/* Image Upload */}
-            <div>
-              <label className="block text-sm font-medium mb-1 text-black">
-                Upload Image
+            <div className="group">
+              <label className="block text-sm font-semibold mb-1 text-[#6b21a8] group-hover:text-[#FF5FCF] transition">
+                Upload Image or Video
               </label>
               <input
                 type="file"
@@ -137,17 +166,36 @@ export default function CreatePostPage() {
               />
               {uploading && (
                 <p className="text-sm text-[#FF5FCF] mt-1">
-                  Uploading image...
+                 {form.imageUrl?"Uploading image...":"Uploading video"} 
                 </p>
               )}
-              {form.imageUrl && (
+              {form.imageUrl ? (
+
                 <img
                   src={form.imageUrl}
                   alt="preview"
                   className="mt-3 rounded-xl max-h-60"
                 />
-              )}
+              ):(form.videoUrl && (
+               <video
+    src={form.videoUrl}
+    controls
+    className="mt-3 rounded-xl max-h-60"
+  />
+                
+              ))}<br />
+              <label className="block text-sm font-medium mt-6 text-black group-hover:text-[#FF5FCF] transition">
+                Captions</label>
+              <input
+                type="text"
+                name="captions"
+                value={form.captions}
+                onChange={handleOnChange}
+                placeholder="Add a caption for your media..."
+                className="w-full rounded-xl px-4 py-3 bg-white/80 border border-black/20 focus:ring-2 focus:ring-[#9929EA]/40 group-hover:border-[#FF5FCF]/60 transition-all"
+              />
             </div>
+            
 
             {/* Submit */}
             <div className="flex justify-end">

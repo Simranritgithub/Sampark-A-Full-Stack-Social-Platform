@@ -6,6 +6,7 @@ const postSchema = new mongoose.Schema(
     imageUrl: String,
     author: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
     videoUrl: String,
+    captions: String,
     likes: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
     comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Comment" }],
   },
