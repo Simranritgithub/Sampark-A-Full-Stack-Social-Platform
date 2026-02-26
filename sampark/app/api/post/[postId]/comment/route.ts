@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { authenticateMiddleware } from "../../../../Middleware/autheticatemiddleware";
 import { addCommentToPost } from "../../../../controllers/postcontroller";
-import "@/lib/db";
+// import "@/lib/db";
 
 export async function PATCH(
   request: NextRequest,

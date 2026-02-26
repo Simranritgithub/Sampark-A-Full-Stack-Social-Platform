@@ -8,7 +8,8 @@ export async function PATCH(
   { params }: { params: { postId: string } }
 ) {
   const auth = authenticateMiddleware(request);
-  if (auth instanceof NextResponse) return auth;
+  if (auth instanceof NextResponse) 
+    return auth;
 
   const result = await toggleLikePost(params.postId, auth.id);
 

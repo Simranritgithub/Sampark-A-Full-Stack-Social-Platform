@@ -2,6 +2,7 @@ import { title } from "process";
 import { Post } from "../models/post";
 import { User } from "../models/user";
 import { connectDB } from "../lib/db";
+import { Types } from "mongoose";
 
 interface CreatePostInput {
   title?: string;
@@ -10,6 +11,7 @@ interface CreatePostInput {
   videoUrl?: string;
   author: string;
   captions?: string;
+  
 }
 
 export const createPost = async (body: CreatePostInput) => {
@@ -31,7 +33,7 @@ console.log("TITLE:", body.title);
     if (!user) {
       return { success: false, message: "Author not found" };
     }
-
+    //Only create
     const newPost = new Post({
       title,
       content,
@@ -40,7 +42,7 @@ console.log("TITLE:", body.title);
       videoUrl: videoUrl || null,
       captions: captions || null,
     });
-
+//then save in db
     await newPost.save();
 
     return { success: true, post: newPost };
@@ -74,7 +76,9 @@ export const toggleLikePost = async (
       return { success: false, message: "Post not found" };
     }
 
-    const alreadyLiked = post.likes.includes(userId);
+    const alreadyLiked = post.likes.some(
+  (id:Types.ObjectId) => id.toString() === userId
+);
 
     if (alreadyLiked) {
       post.likes.pull(userId); // unlike

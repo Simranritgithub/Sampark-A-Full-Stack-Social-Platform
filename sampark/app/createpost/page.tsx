@@ -97,8 +97,8 @@ export default function CreatePostPage() {
       <Navbar />
 
       <div className="w-full max-w-3xl">
-        <h1 className="text-4xl font-extrabold mb-4 text-[#e4dcea]">
-          Create a New Post
+        <h1 className="text-4xl font-extrabold mb-6 text-white/90">
+          Create a <span className="relative inline-block before:block before:absolute before:-inset-1 before:-skew-y-3 before:bg-[#e625ac]"><span className="relative z-10 text-black ">New Post</span></span>
         </h1>
 
         <GlassCard>
@@ -202,7 +202,7 @@ export default function CreatePostPage() {
               <button
                 type="submit"
                 disabled={uploading}
-                className="rounded-full px-6 py-2.5 bg-[#9929EA] text-white font-semibold hover:bg-[#FF5FCF] transition"
+                className="rounded-full px-6 py-2.5 bg-[rgb(153,41,234)] text-white font-semibold hover:bg-[#FF5FCF] transition"
               >
                 Post
               </button>

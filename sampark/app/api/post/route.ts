@@ -4,19 +4,19 @@ import { createPost ,getFeedPosts} from "../../controllers/postcontroller";
 
 
 /* ✅ OPTIONS HANDLER (CORS / PREFLIGHT) */
-export async function OPTIONS() {
-  return NextResponse.json(
-    {},
-    {
-      status: 200,
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, OPTIONS, GET",
-        "Access-Control-Allow-Headers": "Content-Type, Authorization",
-      },
-    }
-  );
-}
+// export async function OPTIONS() {
+//   return NextResponse.json(
+//     {},
+//     {
+//       status: 200,
+//       headers: {
+//         "Access-Control-Allow-Origin": "*",
+//         "Access-Control-Allow-Methods": "POST, OPTIONS, GET",
+//         "Access-Control-Allow-Headers": "Content-Type, Authorization",
+//       },
+//     }
+//   );
+// }
 
 
 /* ✅ POST HANDLER */
@@ -34,8 +34,8 @@ export async function POST(request: NextRequest) {
       ...body,
       author: auth.id,
     });
-    console.log("AUTH:", auth);
-console.log("BODY:", body);
+//     console.log("AUTH:", auth);
+// console.log("BODY:", body);
 
     if (!result.success) {
       return NextResponse.json(
