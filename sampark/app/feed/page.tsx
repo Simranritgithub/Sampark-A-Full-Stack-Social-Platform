@@ -5,6 +5,7 @@ import GlassCard from "../components/Glasscard";
 import Navbar from "../components/Navbar";
 import api from "../lib/axios";
 import { Heart, ChartBar } from "lucide-react";
+import { flushAllTraces } from "next/dist/trace";
 interface Author {
   _id?: string;
   name: string;
@@ -25,18 +26,33 @@ interface Post {
 
 export default function FeedPage() {
   const [posts, setPosts] = useState<Post[]>([]);
+  const [loading,setLoading]=useState(false);
   // const [likes, setLikes] = useState(0);
   // const [comments, setComments] = useState(0);
 
   useEffect(() => {
-    const fetchFeed = async () => {
+     const fetchFeed = async () => {
+      setLoading(true);
+      try{
       const res = await api.get("/post");
       if (res.data.success) {
         setPosts(res.data.posts);
+         
       }
-    };
-    fetchFeed();
-  }, []);
+    }
+    catch (error) {
+  if (error instanceof Error) {
+    console.error(error.message);
+  } else {
+    console.error("Something went wrong");
+  }
+}
+  finally{
+    setLoading(false);
+  }
+  }
+     fetchFeed();
+   }, []);
   const handleonLike = async (postId: string) => {
     try {
       const res = await api.patch(`/post/${postId}/like`);
@@ -77,9 +93,11 @@ export default function FeedPage() {
   };
 
   return (
-    <div className="min-h-screen pt-24 px-4">
+    <div className="min-h-screen pt-24 px-4 flex flex-col items-center">
       <Navbar />
-      <div className="max-w-6xl mx-auto">
+     
+      <div className="max-w-6xl mx-auto ">
+
         <div className="text-center mb-10">
           <h1 className="text-4xl font-extrabold text-white/90 ">
             Your
@@ -90,8 +108,27 @@ export default function FeedPage() {
           <p className="text-white/90 mt-4 text-lg font-medium tracking-widest ">
             Stay updated with the latest posts and updates from your network.
           </p>
-        </div>
-
+        </div >
+         {loading ? (<div className="flex items-center justify-center"><button disabled
+    className="flex items-center gap-3 px-6 py-3 rounded-lg 
+               bg-violet-600 text-white font-semibold
+               cursor-not-allowed">
+                <svg className="w-5 h-5 animate-spin motion-reduce:hidden" viewBox="0 0 24 24"
+      fill="none"> <circle
+        className="opacity-25"
+        cx="12"
+        cy="12"
+        r="10"
+        stroke="currentColor"
+        strokeWidth="4"
+        strokeDasharray="60 40"
+      />
+      {/* <path
+        className="opacity-75"
+        fill="currentColor"
+        d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+      /> */}
+      </svg>Loading...</button></div>):( 
         <div className=" grid grid-cols-3 gap-6">
           {posts.map((post) => (
             <GlassCard key={post._id}>
@@ -135,7 +172,7 @@ export default function FeedPage() {
               </div>
             </GlassCard>
           ))}
-        </div>
+        </div>)}
       </div>
     </div>
   );

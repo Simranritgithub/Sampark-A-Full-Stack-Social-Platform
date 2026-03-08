@@ -2,10 +2,22 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import api from "../../lib/axios";
+import { useRef } from "react";
 
 import GlassCard from "../../components/Glasscard";
 
 export default function LoginPage() {
+  const emailref=useRef<HTMLInputElement | null>(null);
+  const passwordref=useRef<HTMLInputElement | null>(null);
+  useEffect(()=>{
+        emailref.current?.focus();
+  },[])
+  const handleEmailKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  if (e.key === "Enter") {
+    e.preventDefault();   
+    passwordref.current?.focus();
+  }
+};
   const router = useRouter();
   const [form, setForm] = useState({  
     email: "",
@@ -51,6 +63,8 @@ export default function LoginPage() {
             </label>
             <input
               type="email"
+              ref={emailref}
+              onKeyDown={handleEmailKeyDown}
               placeholder="you@example.com"
               onChange={handleOnChange}
               name="email"
@@ -73,6 +87,7 @@ export default function LoginPage() {
             </label>
             <input
               type="password"
+              ref={passwordref}
               placeholder="••••••••"
               onChange={handleOnChange}
               name="password"

@@ -1,11 +1,15 @@
+"use client";
+
 import GlassCard from "../components/Glasscard";
 import Navbar from "../components/Navbar";
 
 export default function DashboardPage() {
+  
   return (
     
-    <div className="min-h-screen  pt-24 flex justify-center">
+    <div className="min-h-screen  pt-24 flex items-center flex-col">
       <Navbar/>
+      
       <div className="w-full max-w-6xl space-y-6">
 
         {/* Welcome Card */}
